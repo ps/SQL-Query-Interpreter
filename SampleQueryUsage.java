@@ -5,7 +5,7 @@ public class SampleQueryUsage {
         if(p.isSelect()) {
             // sample queries:
             // select * from employees;
-            // select firstName, lastName from employees where id=56;
+            // select firstName,lastName from employees where id=56;
 
             System.out.println("\nSELECT query found!\n----------------------");
             String [] fields = p.getSelectFields();

@@ -4,9 +4,64 @@ import java.util.*;
 /**
  * The Query class represents a parsed SQL query as specified by Milestone 1 
  * documentation.
+ * <br><br>
+ * <u>Basic Rules</u>
+ * <br>
+ * NO SPACING allowed in the following cases
+ * <ol>
+ * <li>
+ * In <b>field names</b> or <b>values inserted</b> 
+ * with the INSERT query. If you wish to have two (or more) word phrases 
+ * use underscores.
+ * </li>
+ * <li>
+ * Between <b>field names</b> or <b>values inserted</b> 
+ * with the INSERT query. Use a comma and do not place any sort of spacing before
+ * or after the comma.
+ * </li>
+ * <li>
+ * Around an <b>'=' sign</b> there should be no spaces as well. This applies to the
+ * 'SET' clause of UPDATE as well as the 'ID' part of WHERE clause.
+ * </li>
+ * <li>
+ * Between the terminating semicolon ';' and the preceeding statement
+ * </li>
+ * </ol>
+ * <br>
+ * Remember that queries must end with a semicolon!
+ * <br><br>
+ * If you violate any of these rules your query will be considered invalid
+ * and will not be parsed.
+ * <br><br>
+ * 
+ * <u>Good Query Examples</u>
+ * <ul>
+ * <li><tt>SELECT * FROM employees;</tt></li>
+ * <li><tt>SELECT field1,field2 FROM employees;</tt></li>
+ * <li><tt>SELECT field1,field2 FROM employees WHERE id=2;</tt></li>
+ * <li><tt>INSERT INTO employees VALUES (tom,jones,20,$344);</tt></li>
+ * <li><tt>UPDATE employees SET last=jordan;</tt></li>
+ * <li><tt>UPDATE employees SET last=jordan WHERE id=5;</tt></li>
+ * <li><tt>DELETE FROM employees;</tt></li>
+ * <li><tt>DELETE FROM employees WHERE id=6;</tt></li>
+ * </ul>
+ * 
+ * <br>
+ * 
+ * <u>BAD Query Examples</u>
+ * <ul>
+ * <li><tt>SELECT * FROM employees ; // violates rule 4</tt></li>
+ * <li><tt>SELECT field1, field2 FROM employees; // violates rule 1</tt></li>
+ * <li><tt>SELECT field1,last name FROM employees; // violates rule 2</tt></li>
+ * <li><tt>SELECT field1,field2 FROM employees WHERE id =2; // violates rule 3</tt></li>
+ * <li><tt>INSERT INTO employees VALUES (tom joseph,jones smith,20,$344); // violates rule 1</tt></li>
+ * <li><tt>UPDATE employees SET last=jordan // semicolon missing!</tt></li>
+ * <li><tt>UPDATE employees SET last= jordan WHERE id=5; // violates rule 3</tt></li>
+ * </ul>
+ * 
+ * <br>
  * @author  Pawel Szczurko (pszczurko@gmail.com)
  * @version 1.0, April 2015
- * Note that this version is not thread safe. 
  */
 public class Query {
     /*########## Hello Query class instance vars ###########*/
@@ -49,7 +104,7 @@ public class Query {
     /**
      * Once query has been parsed, this returns a String array with the
      * fields found in a SELECT query.
-     *
+     * <br><br>
      * <b>NOTE:</b> Make sure to first verify that your parsed query is a
      * SELECT query. If it is not, this method returns <tt>null</tt>.
      * 
@@ -63,7 +118,7 @@ public class Query {
     /**
      * Once query has been parsed, this returns a String array with the
      * values found in INSERT query.
-     *
+     * <br><br>
      * <b>NOTE:</b> Make sure to first verify that your parsed query is an
      * INSERT query. If it is not, this method returns <tt>null</tt>.
      * 
@@ -78,10 +133,10 @@ public class Query {
     /**
      * Once query has been parsed, this returns a String representing the 'field'
      * in the UPDATE query.
-     *
+     * <br><br>
      * Ex: For the query "UPDATE employees SET last=jordan;", this method will
      * return 'last' since it is the 'field' specified in this query.
-     *
+     * <br><br>
      * <b>NOTE:</b> Make sure to first verify that your parsed query is an
      * UPDATE query. If it is not, this method returns <tt>null</tt>.
      * 
@@ -96,10 +151,10 @@ public class Query {
     /**
      * Once query has been parsed, this returns a String representing the 'value'
      * in the UPDATE query.
-     *
+     * <br><br>
      * Ex: For the query "UPDATE employees SET last=jordan;", this method will
      * return 'jordan' since it is the 'value' specified in this query.
-     *
+     * <br><br>
      * <b>NOTE:</b> Make sure to first verify that your parsed query is an
      * UPDATE query. If it is not, this method returns <tt>null</tt>.
      * 
@@ -118,7 +173,7 @@ public class Query {
      * @return boolean with 'true' if an error in query parsing occurred, 'false'
      *                 otherwise.
      */
-    public boolean error() { return error; }
+    protected boolean error() { return error; }
 
     /**
      * Fetches the 'ID' field specified in the WHERE part of the query. 
@@ -171,14 +226,25 @@ public class Query {
     /*---------- Query public non-static methods -----------*/
 
     /*########### Query public STATIC methods ###########*/
+    /**
+     * Static method that repeatedly prompts a user for a query until 
+     * a correctly formatted query is inputted. The method returns a Query
+     * object in the same way the the IO.java module returns the requested
+     * type. 
+     * <br><br>
+     * Basic usage:  Query myQuery = Query.readQuery();
+     *
+     * @return Query type is returned, a return value of <tt>null</tt> should
+     *               never occur.
+     */
     public static Query readQuery() {
         Query finalQuery = null;
-        boolean error = false;
+        boolean localError = false;
         while(true) {
-            if(error) {
+            if(localError) {
                 System.out.println("Wrong query input. Try again.");
             }
-            error = true;
+            localError = true;
             String q = getInput();
             finalQuery = readQuery(q);
             if(finalQuery == null) {
@@ -191,6 +257,20 @@ public class Query {
         return finalQuery;
     }
 
+    /**
+     * Static method that analyzes the passed query and attempts to parse and
+     * return it in Query object form. This method might be useful for 
+     * developing so that way a query can be typed into the source code. 
+     * <br><br>
+     * The main difference between the other readQuery method and this one is that
+     * there is no continuous prompting for a new query so this method will 
+     * return <tt>null</tt> if an incorrectly formatted query has been passed.
+     * <br><br>
+     * Basic usage:  Query myQuery = Query.readQuery("select * from employees;");
+     *
+     * @return Query type is returned, a return value of <tt>null</tt> will be
+     *               present if an incorrectly formatted query has been passed.
+     */
     public static Query readQuery(String q) {
         Query finalQuery = null;
 
