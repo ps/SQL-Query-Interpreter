@@ -1,8 +1,15 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * The Query class represents a parsed SQL query as specified by Milestone 1 
+ * documentation.
+ * @author  Pawel Szczurko (pszczurko@gmail.com)
+ * @version 1.0, April 2015
+ * Note that this version is not thread safe. 
+ */
 public class Query {
-    /*########## Query class instance vars ###########*/
+    /*########## Hello Query class instance vars ###########*/
     private static BufferedReader br =
         new BufferedReader(new InputStreamReader(System.in));
 
@@ -13,39 +20,153 @@ public class Query {
     /*---------- Query class instance vars -----------*/
 
     /*########### Query constructors ###########*/
-    public Query() {
+    /**
+     * Default constructor. Meant for internal object creation. Not meant to be
+     * used by an outside user.
+     */
+    protected Query() {
         initialize();
     }
 
-    public Query(char type) {
+    /**
+     * Constructor that creates query based on provided type. Meant for 
+     * internal object creation. Not meant to be used by an outside user.
+     * 
+     * @param type (required) char type specifying query type. As follows
+     *             <ul>
+     *             <li>'s' - SELECT query</li>
+     *             <li>'i' - INSERT query</li>
+     *             <li>'d' - DELETE query</li>
+     *             <li>'u' - UPDATE query</li>
+     *             </ul>
+     */
+    protected Query(char type) {
         initializeType(type);
     }
     /*---------- Query constructors -----------*/
 
     /*########### Query public non-static methods ###########*/
+    /**
+     * Once query has been parsed, this returns a String array with the
+     * fields found in a SELECT query.
+     *
+     * <b>NOTE:</b> Make sure to first verify that your parsed query is a
+     * SELECT query. If it is not, this method returns <tt>null</tt>.
+     * 
+     * @return String array of SELECT fields if current query in fact 
+     *                is a SELECT query, <tt>null</tt> otherwise.
+     */
     public String[] getSelectFields() {
         System.out.println("WARNING, THIS IS NOT A SELECT QUERY!!");
         return null;
     }
+    /**
+     * Once query has been parsed, this returns a String array with the
+     * values found in INSERT query.
+     *
+     * <b>NOTE:</b> Make sure to first verify that your parsed query is an
+     * INSERT query. If it is not, this method returns <tt>null</tt>.
+     * 
+     * @return String array of INSERT values if current query in fact 
+     *                is an INSERT query, <tt>null</tt> otherwise.
+     */
     public String [] getInsertValues() {
         System.out.println("WARNING, THIS IS NOT AN INSERT QUERY!!");
         return null;   
     }
+
+    /**
+     * Once query has been parsed, this returns a String representing the 'field'
+     * in the UPDATE query.
+     *
+     * Ex: For the query "UPDATE employees SET last=jordan;", this method will
+     * return 'last' since it is the 'field' specified in this query.
+     *
+     * <b>NOTE:</b> Make sure to first verify that your parsed query is an
+     * UPDATE query. If it is not, this method returns <tt>null</tt>.
+     * 
+     * @return String representation of the 'field' specified in the current 
+     *                query if it is an UPDATE query, returns <tt>null</tt> otherwise.
+     */
     public String getUpdateField() {
         System.out.println("WARNING, THIS IS NOT AN UPDATE QUERY!!");
         return null;
     }
+
+    /**
+     * Once query has been parsed, this returns a String representing the 'value'
+     * in the UPDATE query.
+     *
+     * Ex: For the query "UPDATE employees SET last=jordan;", this method will
+     * return 'jordan' since it is the 'value' specified in this query.
+     *
+     * <b>NOTE:</b> Make sure to first verify that your parsed query is an
+     * UPDATE query. If it is not, this method returns <tt>null</tt>.
+     * 
+     * @return String representation of the 'value' specified in the current 
+     *                query if it is an UPDATE query, returns <tt>null</tt> otherwise.
+     */
     public String getUpdateValue() {
         System.out.println("WARNING, THIS IS NOT AN UPDATE QUERY!!");
         return null;
     }
 
+    /**
+     * Meant to be used along with <tt>static readQuery(String query)</tt>. If an
+     * error occured when parsing a query, this method will return true.
+     *
+     * @return boolean with 'true' if an error in query parsing occurred, 'false'
+     *                 otherwise.
+     */
     public boolean error() { return error; }
+
+    /**
+     * Fetches the 'ID' field specified in the WHERE part of the query. 
+     *
+     * @return int representing the 'ID' field if one was found, returns 
+     *             <tt>-1</tt> if no WHERE clause was present.
+     */
     public int getWhereID() { return whereID; }
+
+    /**
+     * Fetches the relation/table name from the query.
+     *
+     * @return String representing the relation/table name specified in the 
+     *                query. If an error occurred or no relation/table name
+     *                was found then <tt>NOT FOUND</tt> is returned.
+     */
     public String getRelationName() { return relationName; }
+
+    /**
+     * Method used to check if parsed query is a SELECT query
+     *
+     * @return boolean that returns 'true' if it is a SELECT query, 
+     *                 'false' otherwise.
+     */
     public boolean isSelect() { return isSelect; }
+
+    /**
+     * Method used to check if parsed query is an UPDATE query
+     *
+     * @return boolean that returns 'true' if it is an UPDATE query, 
+     *                 'false' otherwise.
+     */
     public boolean isUpdate() { return isUpdate; }
+
+    /**
+     * Method used to check if parsed query is a DELETE query
+     *
+     * @return boolean that returns 'true' if it is a DELETE query, 
+     *                 'false' otherwise.
+     */
     public boolean isDelete() { return isDelete; }
+
+    /**
+     * Method used to check if parsed query is an INSERT query
+     *
+     * @return boolean that returns 'true' if it is an INSERT query, 
+     *                 'false' otherwise.
+     */
     public boolean isInsert() { return isInsert; }
     /*---------- Query public non-static methods -----------*/
 
@@ -176,7 +297,7 @@ public class Query {
     /*---------- Query private/protected helper methods -----------*/
 
 
-    public static class Select extends Query {
+    private static class Select extends Query {
         private ArrayList<String> fields;
         private StringTokenizer tok;
         public Select(StringTokenizer tok) {
@@ -225,7 +346,7 @@ public class Query {
         }
     }
 
-    public static class Update extends Query {
+    private static class Update extends Query {
         private StringTokenizer tok;
         private FieldValue fv;
 
@@ -270,7 +391,7 @@ public class Query {
         }
     }
 
-    public static class Delete extends Query {
+    private static class Delete extends Query {
         private StringTokenizer tok;
         public Delete(StringTokenizer tok) {
             super('d');    
@@ -291,7 +412,7 @@ public class Query {
         }
     }
 
-    public static class Insert extends Query {
+    private static class Insert extends Query {
         private StringTokenizer tok;
         private ArrayList<String> insertValues;
 
@@ -343,7 +464,7 @@ public class Query {
         }
     }
 
-    public static class FieldValue {
+    private static class FieldValue {
         private String field;
         private String value;
         public FieldValue (String f, String v) {
@@ -353,10 +474,5 @@ public class Query {
         public String getField() { return field; }
         public String getValue() { return value; }
     }
-
-
-
-
 }
-
 
