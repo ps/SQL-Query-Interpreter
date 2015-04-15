@@ -32,7 +32,14 @@ public class QueryTest {
 	// no space between values keyword and actual values
 	q = Query.readQuery("INSERT INTO employees VALUES(ha,to,bum,50,$500);");
         assertTrue(q == null, 7, "INSERT");
+        
+        // check that one value with a trailing comma fails
+	q = Query.readQuery("INSERT INTO employees VALUES(ha,);");
+        assertTrue(q == null, 8, "INSERT");
 
+        // check that one value with a trailing comma fails
+	q = Query.readQuery("INSERT INTO employees VALUES(ha,);");
+        assertTrue(q == null, 8, "INSERT");
     }
 
     public static void generalTests() throws Exception {
@@ -127,7 +134,19 @@ public class QueryTest {
         q = Query.readQuery("select field1,field2,man from employees where id=2");
         assertTrue(q == null, 17, "SELECT");
 
-    
+        // check that one field works properly now
+        q = Query.readQuery("select field1 from employees where id=2;");
+        assertTrue(q != null, 18, "SELECT");
+
+        // make sure trailing comma not outputted
+        q = Query.readQuery("select field1,field2,man,hey, from employees where id=2;");
+        assertTrue(q != null, 19, "SELECT");
+        String [] q19 = q.getSelectFields();
+        assertTrue(q19[0].equals("field1"), 20, "SELECT");
+        assertTrue(q19[1].equals("field2"), 21, "SELECT");
+        assertTrue(q19[2].equals("man"), 22, "SELECT");
+        assertTrue(q19[3].equals("hey"), 23, "SELECT");
+        assertTrue(q19.length == 4, 24, "SELECT");
     }
 
     public static void assertTrue(boolean val, int id, String name) throws Exception {

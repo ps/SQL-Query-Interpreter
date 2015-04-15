@@ -412,7 +412,7 @@ public class Query {
             String potentialFields = tok.nextToken();
             String potentialFrom = tok.nextToken();
             potentialFrom = potentialFrom.toLowerCase();
-            if((potentialFields.indexOf(",") != -1 || potentialFields.equals("*")) && potentialFrom.equals("from")) {
+            if(potentialFrom.equals("from")) {
                 populateFieldsList(potentialFields);
             } else {
                 this.error = true;
