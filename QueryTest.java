@@ -28,6 +28,11 @@ public class QueryTest {
         assertTrue(values.length == 2, 4, "INSERT");
         assertTrue(values[0].equals("test"), 5, "INSERT");
         assertTrue(values[1].equals("test2"), 6, "INSERT");
+
+	// no space between values keyword and actual values
+	q = Query.readQuery("INSERT INTO employees VALUES(ha,to,bum,50,$500);");
+        assertTrue(q == null, 7, "INSERT");
+
     }
 
     public static void generalTests() throws Exception {

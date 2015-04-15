@@ -12,7 +12,9 @@ JFLAGS = -g
 # typing 'make' will invoke the first target entry in the makefile 
 # (the default one in this case)
 # 
-default: SampleQueryUsage.class QueryTest.class
+#default: SampleQueryUsage.class QueryTest.class
+default: QueryTest.class
+
 
 #SampleQueryUsage.class: SampleQueryUsage.java
 #	$(JCC) $(JFLAGS) SampleQueryUsage.java
