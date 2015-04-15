@@ -14,8 +14,8 @@ JFLAGS = -g
 # 
 default: SampleQueryUsage.class QueryTest.class
 
-SampleQueryUsage.class: SampleQueryUsage.java
-	$(JCC) $(JFLAGS) SampleQueryUsage.java
+#SampleQueryUsage.class: SampleQueryUsage.java
+#	$(JCC) $(JFLAGS) SampleQueryUsage.java
 
 QueryTest.class: QueryTest.java
 	$(JCC) $(JFLAGS) QueryTest.java
