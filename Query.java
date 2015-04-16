@@ -230,14 +230,17 @@ public class Query {
      * Static method that repeatedly prompts a user for a query until 
      * a correctly formatted query is inputted. The method returns a Query
      * object in the same way the the IO.java module returns the requested
-     * type. 
+     * type. An exit token needs to be specified in order to exit from 
+     * the query read.
      * <br><br>
-     * Basic usage:  Query myQuery = Query.readQuery();
+     * Basic usage:  Query myQuery = Query.readQuery("exit", true);
      *
-     * @return Query type is returned, a return value of <tt>null</tt> should
-     *               never occur.
+     * @param exitToken String representation of the token to be used in order to exit 
+     * @param ignoreCase boolean indicating whether to ignore case for the exit token
+     * @return Query type is returned if query identified, <tt>null</tt> is 
+     *               returned if exit token is encountered.
      */
-    public static Query readQuery() {
+    public static Query readQuery(String exitToken, boolean ignoreCase) {
         Query finalQuery = null;
         boolean localError = false;
         while(true) {
@@ -246,6 +249,10 @@ public class Query {
             }
             localError = true;
             String q = getInput();
+            boolean exitRead = (ignoreCase ? q.equalsIgnoreCase(exitToken) : q.equals(exitToken));
+            if(exitRead) {
+                return null;
+            }
             finalQuery = readQuery(q);
             if(finalQuery == null) {
                 continue;
@@ -268,6 +275,7 @@ public class Query {
      * <br><br>
      * Basic usage:  Query myQuery = Query.readQuery("select * from employees;");
      *
+     * @param q String representation of query to be interpreted
      * @return Query type is returned, a return value of <tt>null</tt> will be
      *               present if an incorrectly formatted query has been passed.
      */
