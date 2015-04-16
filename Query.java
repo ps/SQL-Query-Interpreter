@@ -26,6 +26,9 @@ import java.util.*;
  * <li>
  * Between the terminating semicolon ';' and the preceeding statement
  * </li>
+ * <li>
+ * Between the 'VALUES' keyword and actual values in parentheses
+ * </li>
  * </ol>
  * <br>
  * Remember that queries must end with a semicolon!
@@ -57,6 +60,7 @@ import java.util.*;
  * <li><tt>INSERT INTO employees VALUES (tom joseph,jones smith,20,$344); // violates rule 1</tt></li>
  * <li><tt>UPDATE employees SET last=jordan // semicolon missing!</tt></li>
  * <li><tt>UPDATE employees SET last= jordan WHERE id=5; // violates rule 3</tt></li>
+ * <li><tt>INSERT INTO employees VALUES(tom,jones,20,$344); // violates rule 5</tt></li>
  * </ul>
  * 
  * <br>
